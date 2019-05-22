@@ -1,0 +1,15 @@
+---
+- hosts: all
+
+  tasks:
+    - name: Start master
+      shell: ./start-master.sh -h 192.168.33.10
+      args:
+        chdir: /opt/spark/sbin
+      when: ansible_hostname == 'master'
+
+    - name: Start slave
+      shell: ./start-slave.sh spark://192.168.33.10:7077
+      args:
+        chdir: /opt/spark/sbin
+      when: "'slave' in ansible_hostname"
