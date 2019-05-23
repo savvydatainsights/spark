@@ -1,15 +1,24 @@
 ---
 - hosts: all
 
+  vars:
+    spark_dir: /opt/spark
+
   tasks:
     - name: Start master
-      shell: ./start-master.sh -h 192.168.33.10
+      shell: ./sbin/start-master.sh -h 192.168.33.10
       args:
-        chdir: /opt/spark/sbin
+        chdir: "{{ spark_dir }}"
       when: ansible_hostname == 'master'
 
     - name: Start slave
-      shell: ./start-slave.sh spark://192.168.33.10:7077
+      shell: ./sbin/start-slave.sh spark://192.168.33.10:7077
       args:
-        chdir: /opt/spark/sbin
+        chdir: "{{ spark_dir }}"
       when: "'slave' in ansible_hostname"
+
+    - name: Configure Log4J
+      copy:
+        src: "{{ spark_dir }}/conf/log4j.properties.template"
+        dest: "{{ spark_dir }}/conf/log4j.properties"
+        remote_src: True
