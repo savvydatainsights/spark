@@ -11,6 +11,11 @@ Vagrant.configure("2") do |config|
   config.vm.define "master" do |master|
     master.vm.hostname = "master"
     master.vm.network "private_network", ip: "192.168.33.10"
+
+    master.trigger.after :destroy, :halt do |trigger|
+      trigger.info = "Cleaning up everything..."
+      trigger.run = {inline: "rm -rf target output"}
+    end
   end
 
   (1..2).each do |i|
