@@ -1,0 +1,19 @@
+---
+- hosts: master
+  gather_facts: False
+
+  tasks:
+    - name: Build Spark application
+      shell: mvn clean install
+      args:
+        chdir: /vagrant
+
+    - name: Remove the output dir, if it exists
+      file:
+        path: /vagrant/output
+        state: absent
+
+    - name: Submit Spark application
+      shell: ./bin/spark-submit --class uk.co.savvydatainsights.WordCount /vagrant/target/wordcount-1.0-SNAPSHOT.jar /vagrant/lorem-ipsum.txt /vagrant/output
+      args:
+        chdir: /opt/spark

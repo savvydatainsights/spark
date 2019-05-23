@@ -15,3 +15,9 @@
 | master | <http://192.168.33.10:8080> |
 | slave1 | <http://192.168.33.20:8081> |
 | slave2 | <http://192.168.33.30:8081> |
+
+## Submitting the sample application
+
+`ansible-playbook submit-spark-application.yml`
+
+The output then can be viewed under the *output* folder.
