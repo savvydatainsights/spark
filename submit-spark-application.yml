@@ -14,6 +14,8 @@
         state: absent
 
     - name: Submit Spark application
-      shell: ./bin/spark-submit --class uk.co.savvydatainsights.WordCount /vagrant/target/wordcount-1.0-SNAPSHOT.jar /vagrant/lorem-ipsum.txt /vagrant/output
+      shell: ./bin/spark-submit --class uk.co.savvydatainsights.WordCount \
+              /vagrant/target/wordcount-1.0-SNAPSHOT.jar \
+              /vagrant/lorem-ipsum.txt /vagrant/output
       args:
         chdir: /opt/spark
