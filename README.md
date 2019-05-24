@@ -40,6 +40,6 @@ Finally, submit the application:
 
 ```bash
 /opt/spark/bin/spark-submit --class uk.co.savvydatainsights.WordCount \
-    /vagrant/target/wordcount-1.0-SNAPSHOT.jar \
-    /vagrant/lorem-ipsum.txt
+    /vagrant/target/spark-examples-1.0-SNAPSHOT.jar \
+    /vagrant/input/lorem-ipsum.txt
 ```
