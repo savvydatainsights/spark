@@ -26,7 +26,7 @@ In order to submit it, execute:
 
 The output then can be viewed under the *output* folder.
 
-### Manually rom the master
+### Manually from the master
 
 The application can also be submitted manually from the master host of the cluster.
 
