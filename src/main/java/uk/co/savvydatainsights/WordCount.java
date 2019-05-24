@@ -9,8 +9,6 @@ import scala.Tuple2;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.SPACE;
-
 public class WordCount {
 
     public static void main(String[] args) throws Exception {
@@ -23,7 +21,7 @@ public class WordCount {
 
         JavaRDD<String> textFile = ctx.textFile(args[0], 1);
         JavaPairRDD<String, Integer> counts = textFile
-            .flatMap(s -> Arrays.asList(s.split(SPACE)).iterator())
+            .flatMap(s -> Arrays.asList(s.replaceAll("[^a-zA-Z ]", "").split("\\s+")).iterator())
             .mapToPair(word -> new Tuple2<>(word, 1))
             .reduceByKey((a, b) -> a + b);
 
