@@ -18,7 +18,7 @@
 
 ## Submitting the sample application
 
-The sample application counts how many words a [lorem ipsum](https://www.lipsum.com) text has.
+The sample application counts how many times each word appears in a [lorem ipsum](https://www.lipsum.com) text.
 
 In order to submit it, execute:
 
