@@ -2,5 +2,6 @@
 .project
 .settings
 .vagrant
+.vscode
 output
 target
