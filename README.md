@@ -18,6 +18,28 @@
 
 ## Submitting the sample application
 
+The sample application counts how many words a [lorem ipsum](https://www.lipsum.com) text has.
+
+In order to submit it, execute:
+
 `ansible-playbook submit-spark-application.yml`
 
 The output then can be viewed under the *output* folder.
+
+### Manually rom the master
+
+The application can also be submitted manually from the master host of the cluster.
+
+First, SSH into the master: `vagrant ssh master`.
+
+Once inside the master, become root: `sudo su -`.
+
+After that, build the application: `mvn install -f /vagrant`.
+
+Finally, submit the application:
+
+```bash
+/opt/spark/bin/spark-submit --class uk.co.savvydatainsights.WordCount \
+    /vagrant/target/wordcount-1.0-SNAPSHOT.jar \
+    /vagrant/lorem-ipsum.txt
+```
