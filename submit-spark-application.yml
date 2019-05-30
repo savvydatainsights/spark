@@ -14,7 +14,8 @@
         state: absent
 
     - name: Submit Spark application
-      shell: ./bin/spark-submit --class uk.co.savvydatainsights.WordCount \
+      shell: ./bin/spark-submit --master spark://{{ hostvars['master']['ansible_host'] }}:7077 \
+              --class uk.co.savvydatainsights.WordCount \
               /vagrant/target/spark-examples-1.0-SNAPSHOT.jar \
               /vagrant/input/lorem-ipsum.txt /vagrant/output
       args:

@@ -6,15 +6,19 @@
 
   tasks:
     - name: Start master
-      shell: ./sbin/start-master.sh -h 192.168.33.10
+      shell: ./sbin/start-master.sh -h {{ hostvars[ansible_hostname]['ansible_host'] }}
       args:
         chdir: "{{ spark_dir }}"
+      environment:
+        SPARK_LOCAL_IP: "{{ hostvars[ansible_hostname]['ansible_host'] }}"
       when: ansible_hostname == 'master'
 
     - name: Start slave
-      shell: ./sbin/start-slave.sh spark://192.168.33.10:7077
+      shell: ./sbin/start-slave.sh spark://{{ hostvars['master']['ansible_host'] }}:7077
       args:
         chdir: "{{ spark_dir }}"
+      environment:
+        SPARK_LOCAL_IP: "{{ hostvars[ansible_hostname]['ansible_host'] }}"
       when: "'slave' in ansible_hostname"
 
     - name: Configure Log4J

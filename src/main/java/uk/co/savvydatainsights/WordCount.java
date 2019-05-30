@@ -16,7 +16,9 @@ public class WordCount {
             System.err.println("Usage: WordCount <file>");
             System.exit(1);
         }
-        SparkSession spark = SparkSession.builder().appName("WordCount").getOrCreate();
+        SparkSession spark = SparkSession.builder()
+            .config("spark.driver.host", "192.168.33.10")
+            .appName("WordCount").getOrCreate();
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
 
         JavaRDD<String> textFile = jsc.textFile(args[0], 1);
