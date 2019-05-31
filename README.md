@@ -40,6 +40,7 @@ Finally, submit the application:
 
 ```bash
 /opt/spark/bin/spark-submit --master spark://192.168.33.10:7077 \
+    --conf spark.driver.host=192.168.33.10 \
     --class uk.co.savvydatainsights.WordCount \
     /vagrant/target/spark-examples-1.0-SNAPSHOT.jar \
     /vagrant/input/lorem-ipsum.txt

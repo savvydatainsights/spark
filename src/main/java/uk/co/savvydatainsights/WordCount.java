@@ -16,16 +16,14 @@ public class WordCount {
             System.err.println("Usage: WordCount <file>");
             System.exit(1);
         }
-        SparkSession spark = SparkSession.builder()
-            .config("spark.driver.host", "192.168.33.10")
-            .appName("WordCount").getOrCreate();
+        SparkSession spark = SparkSession.builder().appName("WordCount").getOrCreate();
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
 
         JavaRDD<String> textFile = jsc.textFile(args[0], 1);
         JavaPairRDD<String, Integer> counts = textFile
-                .flatMap(s -> Arrays.asList(s.replaceAll("[^a-zA-Z ]", "").split("\\s+")).iterator())
-                .mapToPair(word -> new Tuple2<>(word, 1))
-                .reduceByKey((a, b) -> a + b);
+            .flatMap(s -> Arrays.asList(s.replaceAll("[^a-zA-Z ]", "").split("\\s+")).iterator())
+            .mapToPair(word -> new Tuple2<>(word, 1))
+            .reduceByKey((a, b) -> a + b);
 
         List<Tuple2<String, Integer>> output = counts.collect();
         for (Tuple2<String, Integer> tuple : output) {

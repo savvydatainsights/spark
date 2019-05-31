@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: cluster
 
   vars:
     spark_dir: /opt/spark

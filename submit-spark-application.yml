@@ -15,6 +15,7 @@
 
     - name: Submit Spark application
       shell: ./bin/spark-submit --master spark://{{ hostvars['master']['ansible_host'] }}:7077 \
+              --conf spark.driver.host={{ hostvars['master']['ansible_host'] }} \
               --class uk.co.savvydatainsights.WordCount \
               /vagrant/target/spark-examples-1.0-SNAPSHOT.jar \
               /vagrant/input/lorem-ipsum.txt /vagrant/output
