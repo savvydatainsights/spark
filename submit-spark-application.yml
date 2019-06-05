@@ -21,28 +21,54 @@
             path: /opt/spark/apps
             state: directory
 
+        - name: Set the Spark application directory
+          set_fact:
+            spark_app_dir: "/opt/spark/apps/{{ (repo | urlsplit('path') | basename | splitext)[0] }}"
+
         - name: Checkout the Spark application
           git:
             repo: "{{ repo | urlsplit('scheme') + '://' + username.user_input + ':' + password.user_input | urlencode() + '@' + repo | urlsplit('netloc') + repo | urlsplit('path') }}"
-            dest: "/opt/spark/apps/{{ (repo | urlsplit('path') | basename | splitext)[0] }}"
+            dest: "{{ spark_app_dir }}"
 
       when: repo is defined and username.user_input != "" and password.user_input != ""
 
     - name: Build Spark application
       shell: mvn clean install
       args:
-        chdir: /vagrant
+        chdir: "{{ '/vagrant' if spark_app_dir is undefined else spark_app_dir }}"
 
     - name: Remove the output dir, if it exists
       file:
         path: /vagrant/output
         state: absent
 
+    - name: Find out the built JAR
+      shell: ls -d {{ '/vagrant' if spark_app_dir is undefined else spark_app_dir }}/target/*.jar
+      register: find_jar_result
+
+    - name: Find out the input file
+      shell: ls -d {{ '/vagrant/input' if spark_app_dir is undefined else spark_app_dir + '/src/main/resources' }}/*
+      register: find_input_result
+
+    - name: Copy the input file into the shared directory, if necessary
+      copy:
+        src: "{{ find_input_result.stdout }}"
+        dest: /vagrant/input
+        remote_src: True
+      when: spark_app_dir is defined
+
     - name: Submit Spark application
       shell: ./bin/spark-submit --master spark://{{ hostvars['master']['ansible_host'] }}:7077 \
               --conf spark.driver.host={{ hostvars['master']['ansible_host'] }} \
-              --class uk.co.savvydatainsights.WordCount \
-              /vagrant/target/spark-examples-1.0-SNAPSHOT.jar \
-              /vagrant/input/lorem-ipsum.txt /vagrant/output
+              --class {{ 'uk.co.savvydatainsights.WordCount' if class is undefined else class }} \
+              {{ find_jar_result.stdout }} \
+              /vagrant/input/{{ find_input_result.stdout | basename }} \
+              /vagrant/output
       args:
         chdir: /opt/spark
+
+    - name: Remove the input file from the shared directory, if necessary
+      file:
+        path: "/vagrant/input/{{ find_input_result.stdout | basename }}"
+        state: absent
+      when: spark_app_dir is defined
