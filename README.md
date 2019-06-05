@@ -45,3 +45,20 @@ Finally, submit the application:
     /vagrant/target/spark-examples-1.0-SNAPSHOT.jar \
     /vagrant/input/lorem-ipsum.txt
 ```
+
+## Submitting your own Java application
+
+You can also submit to the Spark cluster your own Java application, by setting the parameters *repo* and *class*, like in the example:
+
+```bash
+ansible-playbook submit-spark-application.yml \
+    -e "repo=https://github.com/project/repo.git" \
+    -e "class=com.domain.spark.JavaApplication"
+```
+
+You will be prompted to inform your repository credentials. Then, the application will be cloned, built and submitted to the Spark master instance.
+
+Requirements:
+
+- The project must be a [Maven](https://maven.apache.org) project;
+- It is expected one input file under the *src/main/resources* folder.
